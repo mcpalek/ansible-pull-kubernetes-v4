@@ -1,7 +1,7 @@
 - name: Remove podman from RedHat/CentOs/Rocky
-  yum:
-    name: podman.x86_64
-    state: absent
+  shell: |
+    yum remove podman.x86_64 -y
+    yum autoremove -y
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
