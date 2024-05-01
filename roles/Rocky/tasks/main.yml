@@ -26,7 +26,7 @@
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Install yum utils
   yum:
-    name: "{{ item }}"
+    name: "{{ item2 }}"
     state: latest
   with_items:
   - yum-utils
