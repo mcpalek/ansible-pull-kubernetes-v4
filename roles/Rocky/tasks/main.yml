@@ -35,7 +35,7 @@
 
 - name: Set up docker repository for RedHat/CentOs/Rocky
   get_url:
-    url: https://download.docker.com/linux/centos/7/x86_64/stable/
+    url: https://download.docker.com/linux/centos/7/x86_64/stable/repodata
     dest: /etc/yum.repos.d/docer-ce.repo
     become: yes
     #  shell: >
