@@ -89,8 +89,8 @@
 - name: Ensure containerd is started and enabled at boot.
   service:
     name: containerd
-    state: "{{ containerd_service_state }}"
-    enabled: "{{ containerd_service_enabled }}"
+    state: started
+    enabled: true
 
 - name: Ensure containerd config directory exists.
   file:
