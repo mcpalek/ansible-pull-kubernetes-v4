@@ -79,12 +79,11 @@
 
 - name: Install Kubernetes Package on RedHat/CentOs/Rocky
   package:
-    name: "{{ item }}"
+    name:
+    - kubelet-{{ rocky_kubernetes_version }}
+    - kubeadm-{{ rocky_kubernetes_version }}
+    - kubectl-{{ rocky_kubernetes_version }}
     state: present
-  with_items:
-  - kubectl-{{ rocky_kubernetes_version }}
-  - kubelet-{{ rocky_kubernetes_version }}
-  - kubeadm-{{ rocky_kubernetes_version }}
   #  shell: >
   #    yum install -y kubelet-{{ rocky_kubernetes_version }} kubeadm-{{ rocky_kubernetes_version }} kubectl-{{ rocky_kubernetes_version }} --disableexcludes=kubernetes
   when:
