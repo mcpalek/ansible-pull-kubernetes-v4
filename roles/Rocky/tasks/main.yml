@@ -116,7 +116,10 @@
     line: '          SystemdCgroup = true'
     state: present
     path: /tmp/containerd_config.toml
-
+- name: restart containerd
+  service:
+    name: containerd
+    state: restarted
 - name: Copy config.toml to /etc/containerd
   copy:
     remote_src: true
