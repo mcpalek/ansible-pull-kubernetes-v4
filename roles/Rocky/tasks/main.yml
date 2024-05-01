@@ -26,9 +26,7 @@
 
 - name: Set up docker repository for RedHat/CentOs/Rocky
   shell: >
-    yum install -y yum-utils
-
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    yum install -y yum-utils #magic___^_^___line yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Install the latest version of Docker Engine and containerd on RedHat/CentOs/Rocky
@@ -54,41 +52,16 @@
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Add kubernetes Repo to RedHat/CentOs/Rocky
   shell: >
-    cat <<EOF > /etc/yum.repos.d/kubernetes.repo
-
-    [kubernetes]
-
-    name=Kubernetes
-
-    baseurl=https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/rpm/
-
-    enabled=1
-
-    gpgcheck=1
-
-    gpgkey=https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/rpm/repodata/repomd.xml.key
-
-    exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+    cat <<EOF > /etc/yum.repos.d/kubernetes.repo #magic___^_^___line [kubernetes] #magic___^_^___line name=Kubernetes #magic___^_^___line baseurl=https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/rpm/ #magic___^_^___line enabled=1 #magic___^_^___line gpgcheck=1 #magic___^_^___line gpgkey=https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/rpm/repodata/repomd.xml.key #magic___^_^___line exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
 - name: Install Kubernetes Package on RedHat/CentOs/Rocky
   shell: >
-    yum install -y kubelet-{{ rocky_kubernetes_version }} kubeadm-{{ rocky_kubernetes_version }} kubectl-{{ rocky_kubernetes_version }} --disableexcludes=kubernetes
-
-    yum install containerd.io
-
-    sudo systemctl enable --now kubelet
-
-    sudo containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
-
-    sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
-
-    #rm /etc/containerd/config.toml
-
-    systemctl restart containerd
+    yum install -y kubelet-{{ rocky_kubernetes_version }} kubeadm-{{ rocky_kubernetes_version }} kubectl-{{ rocky_kubernetes_version }} --disableexcludes=kubernetes #magic___^_^___line yum install containerd.io #magic___^_^___line sudo systemctl enable --now kubelet #magic___^_^___line sudo containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1 #magic___^_^___line sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml #magic___^_^___line #rm /etc/containerd/config.toml #magic___^_^___line systemctl restart containerd
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+
 - name: Check if firewalld package is installed (on RHEL).
   command: yum list installed firewalld
   register: firewalld_installed
@@ -96,7 +69,7 @@
   changed_when: false
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
-  - firewall_disable_firewalld
+  # - firewall_disable_firewalld
   check_mode: false
 - name: DisaBle Firewall on RedHat/CentOs/Rocky
   service:
@@ -105,7 +78,7 @@
     enabled: false
   when:
   - ansible_distribution in ["Rocky", "CentOs" ,"RedHat"]
-  - firewall_disable_firewalld
-  - firewalld_installed.rc == 0
+  #  - firewall_disable_firewalld
+# - firewalld_installed.rc == 0
 
 
