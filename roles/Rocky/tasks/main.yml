@@ -1,7 +1,7 @@
 - name: Remove podman from RedHat/CentOs/Rocky
-  shell: |
-    yum remove podman.x86_64 -y
-    yum autoremove -y
+  yum:
+    name: podman.x86_64
+    state: absent
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
@@ -34,12 +34,12 @@
   - lvm2
 
 - name: Set up docker repository for RedHat/CentOs/Rocky
-  # get_url:
-  #  url: https://download.docker.com/linux/centos/docker-ce.repo
-  #  dest: /etc/yum.repos.d/docer-ce.repo
-  #  become: yes
-  shell: >
-    yum install -y yum-utils #magic___^_^___line yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  get_url:
+    url: https://download.docker.com/linux/centos/7/x86_64/stable/
+    dest: /etc/yum.repos.d/docer-ce.repo
+    become: yes
+    #  shell: >
+    #    yum install -y yum-utils #magic___^_^___line yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Install the latest version of Docker Engine and containerd on RedHat/CentOs/Rocky
