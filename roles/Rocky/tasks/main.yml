@@ -26,11 +26,10 @@
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
 - name: Set up docker repository for RedHat/CentOs/Rocky
-  yum_repository:
-    name: docker
-    description: repo for docker
-    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
-    gpgcheck: no
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+    become: yes
     #  shell: >
     #    yum install -y yum-utils #magic___^_^___line yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   when:
