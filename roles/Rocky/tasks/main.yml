@@ -6,7 +6,9 @@
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
 - name: remove buildah from RedHat/CentOs/Rocky
-  yum: "name: buildah.x86_64 \nstate: absent\n"
+  yum:
+    name: buildah.x86_64
+    state: absent
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Uninstall old Docker versions from RedHat/CentOs/Rocky
