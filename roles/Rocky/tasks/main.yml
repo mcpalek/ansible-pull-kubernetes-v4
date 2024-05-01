@@ -73,13 +73,8 @@
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
 - name: Install Kubernetes Package on RedHat/CentOs/Rocky
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-  - kubectl-{{ rocky_kubernetes_version }}
-  - kubelet-{{ rocky_kubernetes_version }}
-  - kubeadm-{{ rocky_kubernetes_version }}
+  shell: >
+    yum install -y kubelet-{{ rocky_kubernetes_version }} kubeadm-{{ rocky_kubernetes_version }} kubectl-{{ rocky_kubernetes_version }} --disableexcludes=kubernetes
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Ensure containerd is installed.
