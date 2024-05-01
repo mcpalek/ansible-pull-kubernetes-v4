@@ -130,8 +130,6 @@
     state: absent
   changed_when: false
 
-- name: Ensure containerd is restarted immediately if necessary.
-  meta: flush_handlers
 
 - name: Check if firewalld package is installed (on RHEL).
   command: yum list installed firewalld
