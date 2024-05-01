@@ -93,53 +93,19 @@
   package:
     name: containerd.io
     state: present
-- name: Ensure containerd is started and enabled at boot.
-  service:
-    name: containerd
-    state: started
-    enabled: true
-
-- name: Ensure containerd config directory exists.
-  file:
-    path: /etc/containerd
-    state: directory
-  register: containerd_dir
-
-- name: Get defaults from containerd.
-  command: containerd config default
-  changed_when: false
-  register: containerd_config_default
 
 
-- name: Prepare containerd/config.toml from default config
-  copy:
-    dest: /tmp/containerd_config.toml
-    content: "{{ containerd_config_default.stdout }}"
+- name: Use systemd Cgroup driver for containerd
+  shell: |
+    containerd config default > /etc/containerd/config.toml
+    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 
-
-- name: Set Cgroup driver to systemd
-  lineinfile:
-    insertafter: '.*\[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options\]$'
-    line: '          SystemdCgroup = true'
-    state: present
-    path: /tmp/containerd_config.toml
-
-- name: Copy config.toml to /etc/containerd
-  copy:
-    remote_src: true
-    src: /tmp/containerd_config.toml
-    dest: /etc/containerd/config.toml
-    #notify: restart containerd
-- name: restart conteinerd
-  service:
+- name: Restart containerd
+  systemd:
     name: containerd
     state: restarted
-
-- name: Cleanup temporary file
-  file:
-    path: /tmp/containerd_config.toml
-    state: absent
-  changed_when: false
+    enabled: yes
+    daemon_reload: yes
 
 
 - name: Check if firewalld package is installed (on RHEL).
