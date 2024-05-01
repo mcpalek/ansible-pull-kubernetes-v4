@@ -1,0 +1,30 @@
+- hosts: all
+  connection: local
+  become: true
+  become_user: root
+  roles:
+  - base
+
+- hosts: all
+  connection: local
+  become: true
+  become_user: root
+  tasks:
+   - name: Choose distribution
+     ansible.builtin.include_role:
+       name: "{{ item }}"
+     loop:
+      - "{{ ansible_distribution }}"
+  
+- hosts: all #master
+  connection: local
+  become: true
+  become_user: root
+  roles:
+  - initkubernetes
+#ovo dole necemo ovde da implementiramo
+#hosts: rocky #workers
+#become: true
+#become_user: root
+#roles:
+# -# worker-join
