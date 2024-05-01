@@ -77,9 +77,9 @@
     name: "{{ item }}"
     state: present
   with_items:
-  - kubectl{{ rocky_kubernetes_version }}
-  - kubelet{{ rocky_kubernetes_version }}
-  - kubeadm{{ rocky_kubernetes_version }}
+  - kubectl-{{ rocky_kubernetes_version }}
+  - kubelet-{{ rocky_kubernetes_version }}
+  - kubeadm-{{ rocky_kubernetes_version }}
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Ensure containerd is installed.
