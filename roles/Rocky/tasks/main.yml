@@ -82,6 +82,13 @@
     yum install -y kubelet-{{ rocky_kubernetes_version }} kubeadm-{{ rocky_kubernetes_version }} kubectl-{{ rocky_kubernetes_version }} --disableexcludes=kubernetes
   when:
   - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+
+- name: Enable Kubelet service.
+  service:
+    name: kubelet
+    state: started
+    enabled: true
+
 - name: Ensure containerd is installed.
   package:
     name: containerd.io
@@ -122,7 +129,11 @@
     remote_src: true
     src: /tmp/containerd_config.toml
     dest: /etc/containerd/config.toml
-  notify: restart containerd
+    #notify: restart containerd
+- name: restart conteinerd
+  service:
+    name: containerd
+    state: restarted
 
 - name: Cleanup temporary file
   file:
