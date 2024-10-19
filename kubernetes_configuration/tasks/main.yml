@@ -16,7 +16,7 @@
 
 - name: Check if taint exists on nodes
   ansible.builtin.shell: |
-    kubectl get nodes --no-headers | grep "control-plane"
+    kubectl get nodes -o json | jq -e '.items[] | select(.spec.taints != null) | select(.spec.taints[]? | select(.key == "node-role.kubernetes.io/control-plane"))' > /dev/null
   register: taint_check
   ignore_errors: true
   changed_when: false
