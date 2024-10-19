@@ -42,9 +42,15 @@
   when: ansible_os_family == "RedHat"
 
 - name: Check if Docker is installed
-  command: docker --version
+  ansible.builtin.command: "docker --version"
   register: docker_check
   ignore_errors: true
+  changed_when: false
+
+- name: Check Docker installation status
+  ansible.builtin.debug:
+    msg: "Docker is not installed"
+  when: docker_check.failed
 
 - name: Install Docker on Debian-based systems
   apt:
