@@ -24,7 +24,7 @@
 - name: Debug Podman check
   debug:
     msg: "Podman is installed"
-  when: podman_check.failed
+  when: podman_check.rc == 0
 
 - name: Remove Podman on Red Hat-based systems
   yum:
