@@ -5,6 +5,18 @@
     state: absent
   when: ansible_os_family == "RedHat"
 
+- name: Add Docker GPG key on Debian-based systems
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker GPG key on Red Hat-based systems
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://download.docker.com/linux/centos/gpg
+  when: ansible_os_family == "RedHat"
+
 - name: Add Docker repository on Debian-based systems
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
