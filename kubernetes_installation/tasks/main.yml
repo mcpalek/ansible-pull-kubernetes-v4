@@ -8,8 +8,8 @@
   
 - name: Add Kubernetes repository on Debian-based systems
   ansible.builtin.shell: |
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/v1.31/deb/Release.key/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
   when: ansible_os_family == "Debian"
 
 - name: Add Kubernetes repository on Red Hat-based systems
