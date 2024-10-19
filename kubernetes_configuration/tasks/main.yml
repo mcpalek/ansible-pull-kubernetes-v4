@@ -20,7 +20,12 @@
   register: taint_check
   ignore_errors: true
   changed_when: false
-
+  
+- name: Debug Taints check
+  ansible.builtin.debug:
+    msg: "Taints are removed"
+  when: taint_check.rc == 0
+  
 - name: Remove taints if they exist
   ansible.builtin.shell: |
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
