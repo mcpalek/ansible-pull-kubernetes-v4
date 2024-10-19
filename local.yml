@@ -1,30 +1,32 @@
-- hosts: all
-  connection: local
+---
+- name: Install Kubernetes on a server
+  hosts: all
   become: true
-  become_user: root
-  roles:
-  - base
 
-- hosts: all
-  connection: local
-  become: true
-  become_user: root
-  tasks:
-   - name: Choose distribution
-     ansible.builtin.include_role:
-       name: "{{ item }}"
-     loop:
-      - "{{ ansible_distribution }}"
-  
-- hosts: all #master
-  connection: local
-  become: true
-  become_user: root
+  vars:
+    kubernetes_version: "1.31"
+
+  pre_tasks:
+    - name: Ensure pip is installed on Debian-based systems
+      ansible.builtin.apt:
+        name: python3-pip
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure pip is installed on Red Hat-based systems
+      ansible.builtin.yum:
+        name: python3-pip
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure kubernetes Python library is installed
+      ansible.builtin.pip:
+        name: kubernetes
+        state: present
+      become: yes
+
   roles:
-  - initkubernetes
-#ovo dole necemo ovde da implementiramo
-#hosts: rocky #workers
-#become: true
-#become_user: root
-#roles:
-# -# worker-join
+    - kubernetes_prerequisites
+    - docker_installation
+    - kubernetes_installation
+    - kubernetes_configuration

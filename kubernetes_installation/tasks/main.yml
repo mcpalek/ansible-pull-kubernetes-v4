@@ -1,0 +1,30 @@
+---
+- name: Add Kubernetes repository on Debian-based systems
+  apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb /
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Kubernetes repository on Red Hat-based systems
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes Repository
+    baseurl: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/
+    gpgcheck: yes
+    enabled: yes
+    gpgkey: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/Release.key
+  when: ansible_os_family == "RedHat"
+
+- name: Check if kubectl is installed
+  stat:
+    path: /usr/bin/kubectl
+  register: kubectl_check
+
+- name: Install specific version of Kubernetes components
+  package:
+    name:
+      - "kubelet={{ kubernetes_version }}-00"
+      - "kubeadm={{ kubernetes_version }}-00"
+      - "kubectl={{ kubernetes_version }}-00"
+    state: present
+  when: not kubectl_check.stat.exists
