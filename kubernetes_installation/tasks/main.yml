@@ -9,17 +9,17 @@
 - name: Add Kubernetes repository on Debian-based systems
   ansible.builtin.shell: |
     curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ repo_version }}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
   when: ansible_os_family == "Debian"
 
 - name: Add Kubernetes repository on Red Hat-based systems
   yum_repository:
     name: kubernetes
     description: Kubernetes Repository
-    baseurl: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/
+    baseurl: https://pkgs.k8s.io/core:/stable:/{{ redhat_version }}/rpm/
     gpgcheck: yes
     enabled: yes
-    gpgkey: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/Release.key
+    gpgkey: https://pkgs.k8s.io/core:/stable:/{{ redhat_version }}/rpm/Release.key
   when: ansible_os_family == "RedHat"
 
 - name: Check if kubectl is installed
