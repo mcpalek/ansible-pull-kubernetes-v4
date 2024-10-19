@@ -24,7 +24,7 @@
 - name: Debug Taints check
   ansible.builtin.debug:
     msg: "Taints are removed"
-  when: taint_check.rc == 0
+  when: taint_check.rc != 0
   
 - name: Remove taints if they exist
   ansible.builtin.shell: |
