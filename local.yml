@@ -1,5 +1,4 @@
 ---
-- name: Install Kubernetes on a server
   hosts: all
   connection: local
   become: true
