@@ -16,22 +16,17 @@
 
 - name: Check if taint exists on nodes
   ansible.builtin.shell: |
-    kubectl get nodes -o json | jq -c '.items[] | select(.spec.taints[] | contains({key:"node-role.kubernetes.io/control-plane", effect:"NoSchedule"}))'
+    kubectl get nodes -o json | jq -e '.items[].spec.taints[] | select(.key == "node-role.kubernetes.io/control-plane")' > /dev/null
   register: taint_check
   ignore_errors: true
   changed_when: false
 
-- name: Check taint status
-  ansible.builtin.debug:
-    msg: "Taints are removed"
-  when: taint_check.rc == 0
-
 - name: Remove taints if they exist
   ansible.builtin.shell: |
-    kubectl taint nodes --all node-role.kubernetes.io/control-plane-:NoSchedule-
-  when: taint_check.rc != 0
-  ignore_errors: true
-  changed_when: false
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+  when: taint_check.rc == 0
+  changed_when: true
+  become: true
    
 - name: Check if Calico is installed
   ansible.builtin.shell: "kubectl get pods -n kube-system -l k8s-app=calico-node"
