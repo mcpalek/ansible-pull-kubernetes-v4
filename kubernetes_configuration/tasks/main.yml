@@ -17,7 +17,7 @@
 - name: remove taints
   shell: |
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-   when: kubeadm_output is succeeded
+  when: kubeadm_output is succeeded
    
 - name: Install Pod network (Calico)
   command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
