@@ -1,33 +1,31 @@
 ---
-  hosts: all
-  connection: local
-  become: true
-  become_user: root
+  - hosts: all
+    connection: local
+    become: true
+    become_user: root
+    roles: base
+  
+  - hosts: all
+    connection: local
+    become: true
+    become_user: root
+    roles: kubernetes_prerequisites
 
-  vars:
-    kubernetes_version: "1.31"
+  - hosts: all
+    connection: local
+    become: true
+    become_user: root
+    roles: docker_installation
 
-  pre_tasks:
-    - name: Ensure pip is installed on Debian-based systems
-      ansible.builtin.apt:
-        name: python3-pip
-        state: present
-      when: ansible_os_family == "Debian"
+  - hosts: all
+    connection: local
+    become: true
+    become_user: root
+    roles: kubernetes_installation
 
-    - name: Ensure pip is installed on Red Hat-based systems
-      ansible.builtin.yum:
-        name: python3-pip
-        state: present
-      when: ansible_os_family == "RedHat"
+  - hosts: all
+    connection: local
+    become: true
+    become_user: root
+    roles: kubernetes_configuration
 
-    - name: Ensure kubernetes Python library is installed
-      ansible.builtin.pip:
-        name: kubernetes
-        state: present
-      become: yes
-
-  roles:
-    - kubernetes_prerequisites
-    - docker_installation
-    - kubernetes_installation
-    - kubernetes_configuration
