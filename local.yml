@@ -2,29 +2,34 @@
     connection: local
     become: true
     become_user: root
-    roles: base
+    roles: 
+    - base
   
   - hosts: all
     connection: local
     become: true
     become_user: root
-    roles: kubernetes_prerequisites
+    roles: 
+    - kubernetes_prerequisites
 
   - hosts: all
     connection: local
     become: true
     become_user: root
-    roles: docker_installation
+    roles: 
+    - docker_installation
 
   - hosts: all
     connection: local
     become: true
     become_user: root
-    roles: kubernetes_installation
+    roles: 
+    - kubernetes_installation
 
   - hosts: all
     connection: local
     become: true
     become_user: root
-    roles: kubernetes_configuration
+    roles: 
+    - kubernetes_configuration
 
