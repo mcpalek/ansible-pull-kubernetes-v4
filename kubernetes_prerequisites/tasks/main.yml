@@ -1,10 +1,11 @@
 ---
 - name: Check if swap is disabled
-  command: sudo swapon --show
+  command: swapon --show
   register: swap_check
   failed_when: swap_check.rc != 1
+  become: true
 
 - name: Disable swap
-  command: sudo swapoff -a
+  command: swapoff -a
   when: swap_check.rc == 0
-
+  become: true
