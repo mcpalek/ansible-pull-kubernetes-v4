@@ -73,7 +73,7 @@
           - docker-ce-cli
           - containerd.io
   when:
-        - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+        - docker_check.failed and ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Start and enable docker on RedHat/CentOs/Rocky
   systemd:
         name: docker
