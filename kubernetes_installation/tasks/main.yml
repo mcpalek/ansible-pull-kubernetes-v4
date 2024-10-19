@@ -51,7 +51,7 @@
         - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 - name: Install Kubernetes Package on RedHat/CentOs/Rocky
   shell: >
-        yum install -y kubelet-{{ rrdhat_kubernetes_version }} kubeadm-{{ redhat_kubernetes_version }} kubectl-{{ redhat_kubernetes_version }} --disableexcludes=kubernetes
+        yum install -y kubelet-{{ redhat_kubernetes_version }} kubeadm-{{ redhat_kubernetes_version }} kubectl-{{ redhat_kubernetes_version }} --disableexcludes=kubernetes
 
         yum install containerd.io
 
