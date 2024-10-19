@@ -23,8 +23,8 @@
 
 - name: Debug Podman check
   debug:
-    msg: "Podman is not installed"
-  when: podman_check.rc != 0
+    msg: "Podman is  installed"
+  when: podman_check.rc == 0
 
 - name: Remove Podman on Red Hat-based systems
   yum:
@@ -32,12 +32,23 @@
     state: absent
   when: podman_check.rc == 0 and ansible_os_family == "RedHat"
   
-- name: remove buildah from RedHat/CentOs/Rocky
-  shell: | 
-        yum remove buildah.x86_64 -y
-        yum autoremove -y
-  when:
-        - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+- name: Check if Buildah is installed
+  command: buildah --version
+  register: buildah_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Debug Buildah check
+  debug:
+    msg: "Buildah is installed"
+  when: buildah_check.rc == 0
+
+- name: Remove Buildah on Red Hat-based systems
+  yum:
+    name: buildah
+    state: absent
+  when: buildah_check.rc == 0 and ansible_os_family == "RedHat"
+  
 - name: Uninstall old Docker versions from RedHat/CentOs/Rocky
   yum:
         name:
