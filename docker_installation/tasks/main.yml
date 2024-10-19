@@ -15,12 +15,23 @@
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   when: ansible_os_family == "Debian"
 
-- name: Remove podman from RedHat/CentOs/Rocky
-  shell: |
-        yum remove podman.x86_64 -y
-        yum autoremove -y
-  when:
-        - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+- name: Check if Podman is installed
+  command: podman --version
+  register: podman_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Debug Podman check
+  debug:
+    msg: "Podman is installed"
+  when: podman_check.rc == 0
+
+- name: Remove Podman on Red Hat-based systems
+  yum:
+    name: podman
+    state: absent
+  when: podman_check.rc == 0 and ansible_os_family == "RedHat"
+  
 - name: remove buildah from RedHat/CentOs/Rocky
   shell: | 
         yum remove buildah.x86_64 -y
