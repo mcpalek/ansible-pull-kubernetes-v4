@@ -1,27 +1,21 @@
 ---
 - name: Ensure necessary packages are installed on Debian-based systems
-  apt:
-    name: 
-      - curl
-      - gnupg2
-      - software-properties-common
-      - apt-transport-https
-      - ca-certificates
-    state: present
-    update_cache: yes
+  ansible.builtin.shell: |
+    apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
   when: ansible_os_family == "Debian"
+  become: true
 
 - name: Add Docker GPG key on Debian-based systems
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+  ansible.builtin.shell: |
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   when: ansible_os_family == "Debian"
+  become: true
 
 - name: Add Docker repository on Debian-based systems
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
-    state: present
+  ansible.builtin.shell: |
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   when: ansible_os_family == "Debian"
+  become: true
 
 - name: Ensure necessary packages are installed on Red Hat-based systems
   yum:
