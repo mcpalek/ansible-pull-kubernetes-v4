@@ -40,23 +40,13 @@
         state: absent
   when:
         - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
+- name: Set up docker repository for RedHat/CentOs/Rocky
+  shell: >
+        yum install -y yum-utils
 
-
-- name: Add Docker GPG key on Red Hat-based systems
-  ansible.builtin.rpm_key:
-    state: present
-    key: https://download.docker.com/linux/centos/gpg
-  when: ansible_os_family == "RedHat"
-
-- name: Add Docker repository on Red Hat-based systems
-  yum_repository:
-    name: docker-ce-stable
-    description: Docker CE Stable - $basearch
-    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
-    gpgcheck: 1
-    gpgkey: https://download.docker.com/linux/centos/gpg
-    enabled: 1
-  when: ansible_os_family == "RedHat"
+        yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  when:
+        - ansible_distribution in ["Rocky", "CentOS" ,"RedHat"]
 
 - name: Check if Docker is installed
   ansible.builtin.command: "docker --version"
