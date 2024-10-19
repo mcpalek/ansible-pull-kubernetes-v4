@@ -29,13 +29,25 @@
 - name: Remove taints if they exist
   ansible.builtin.shell: |
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-:NoSchedule-
-  when: taint_check.rc == 0
+  when: taint_check.rc != 0
   ignore_errors: true
   changed_when: false
    
-- name: Install Pod network (Calico)
-  command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-  when: kubeadm_output is succeeded
+- name: Check if Calico is installed
+  ansible.builtin.shell: "kubectl get pods -n kube-system -l k8s-app=calico-node"
+  register: calico_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Debug Calico check
+  ansible.builtin.debug:
+    msg: "Calico is installed"
+  when: calico_check.rc == 0
+
+- name: Install Calico if not installed
+  ansible.builtin.shell: "kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml"
+  when: calico_check.rc != 0
+  changed_when: true
 
 
  
