@@ -1,7 +1,8 @@
 ---
 - name: Install Kubernetes on a server
-  hosts: all
+  connection: local
   become: true
+  become_user: root
 
   vars:
     kubernetes_version: "1.31"
