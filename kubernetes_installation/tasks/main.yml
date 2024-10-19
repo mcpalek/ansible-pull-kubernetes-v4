@@ -23,8 +23,8 @@
 - name: Install specific version of Kubernetes components
   package:
     name:
-      - "kubelet={{ kubernetes_version }}-00"
-      - "kubeadm={{ kubernetes_version }}-00"
-      - "kubectl={{ kubernetes_version }}-00"
+      - "kubelet={{ ubuntu_kubernetes_version }}"
+      - "kubeadm={{ ubuntu_kubernetes_version }}"
+      - "kubectl={{ ubuntu_kubernetes_version }}"
     state: present
-  when: not kubectl_check.stat.exists
+  when: not kubectl_check.stat.exists and ansible_os_family == "Debian"
