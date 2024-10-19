@@ -14,10 +14,19 @@
     content: "{{ lookup('file', '/etc/kubernetes/admin.conf') }}"
   when: kubeadm_output is succeeded
 
-- name: remove taints
-  shell: |
-    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-  when: kubeadm_output is succeeded
+- name: Check if taint exists on nodes
+  ansible.builtin.shell: |
+    kubectl get nodes -o json | jq -c '.items[] | select(.spec.taints[] | contains({key:"node-role.kubernetes.io/control-plane", effect:"NoSchedule"}))'
+  register: taint_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Remove taints if they exist
+  ansible.builtin.shell: |
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-:NoSchedule-
+  when: taint_check.rc == 0
+  ignore_errors: true
+  changed_when: false
    
 - name: Install Pod network (Calico)
   command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
