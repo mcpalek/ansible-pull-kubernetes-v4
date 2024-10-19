@@ -1,11 +1,18 @@
 ---
 - name: Check if swap is disabled
-  ansible.builtin.shell: swapon --show
+  ansible.builtin.shell: "swapon --show"
   register: swap_check
-  failed_when: swap_check.rc != 1
+  changed_when: false
   become: true
 
 - name: Disable swap
-  ansible.builtin.shell: swapoff -a
-  when: swap_check.rc == 0
+  ansible.builtin.shell: "swapoff -a"
+  when: swap_check.stdout != ''
+  become: true
+
+- name: Remove swap entry from /etc/fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: '(^/swap.img|^UUID=.*swap)'
+    state: absent
   become: true
