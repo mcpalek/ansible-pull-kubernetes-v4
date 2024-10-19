@@ -3,7 +3,11 @@
   command: kubeadm init --pod-network-cidr=192.168.0.0/16
   register: kubeadm_output
   when: not kubectl_check.stat.exists
-
+  
+- name: create .kube folder
+  shell: mkdir -p $HOME/.kube
+  when: kubeadm_output is succeeded
+  
 - name: Set up kubeconfig for the root user
   copy:
     dest: /root/.kube/config
